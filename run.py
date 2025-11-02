@@ -7,12 +7,12 @@ from collections import OrderedDict
 class Typed:
     expected_type = type(None)
 
-    def __init__(self, name):
+    def __init__(self, name=None):
         self._name = name
 
     def __set__(self, instance, value):
         if not isinstance(value, self.expected_type):
-            raise TypeError("Expected " + self.expected_type)
+            raise TypeError("Expected {!r}".format(self.expected_type.__name__))
         instance.__dict__[self._name] = value
 
 
@@ -29,24 +29,24 @@ class String(Typed):
 
 
 class OrderedMeta(type):
-    def __new__(clsname, bases, clsdict):
+    def __new__(cls, clsname, bases, clsdict):
         d = dict(clsdict)
         _order = []
         for name, value in clsdict.items():
             if isinstance(value, Typed):
                 value._name = name
-                _order.append[name]
+                _order.append(name)
         d["_order"] = _order
-        return super().__new__(clsname, bases, d)
+        return super().__new__(cls, clsname, bases, d)
 
     @classmethod
-    def __prepare__(cls):
+    def __prepare__(mcls, name, bases, **kwars):
         return OrderedDict()
 
 
 class OrderedStruct(metaclass=OrderedMeta):
     def as_csv(self):
-        return ",".join(getattr(self, name) for name in self._order)
+        return ",".join(name for name in self._order)
 
 
 class Stock(OrderedStruct):
