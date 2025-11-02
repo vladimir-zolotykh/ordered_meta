@@ -12,7 +12,7 @@ class Typed:
 
     def __set__(self, instance, value):
         if not isinstance(value, self.expected_type):
-            raise TypeError("Expected {!r}".format(self.expected_type.__name__))
+            raise TypeError("{:s} expected {!r}".format(self._name, self.expected_type))
         instance.__dict__[self._name] = value
 
 
@@ -46,7 +46,7 @@ class OrderedMeta(type):
 
 class OrderedStruct(metaclass=OrderedMeta):
     def as_csv(self):
-        return ",".join(name for name in self._order)
+        return ",".join(str(getattr(self, name)) for name in self._order)
 
 
 class Stock(OrderedStruct):
