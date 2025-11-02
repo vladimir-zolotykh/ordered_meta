@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
+from typing import Type
 from collections import OrderedDict
 
 
 class Typed:
-    expected_type = type(None)
+    expected_type: Type[int] | Type[float] | Type[str] | Type[None] = type(None)
 
     def __init__(self, name=None):
         self._name = name
